@@ -29,6 +29,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editText" />
 
+    <Button
+        android:id="@+id/resetTimerButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Reset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startTimerButton" />
+
     <!-- TextView для отображения оставшегося времени -->
     <TextView
         android:id="@+id/secondsLeftTextView"
@@ -38,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/startTimerButton"
+        app:layout_constraintTop_toBottomOf="@id/resetTimerButton"
         tools:text="0:33" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

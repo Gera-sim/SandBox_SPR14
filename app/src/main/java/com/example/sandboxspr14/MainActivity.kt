@@ -1,9 +1,14 @@
 package com.example.sandboxspr14
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.*
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
+import android.os.VibrationEffect
+import android.os.Vibrator
+
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
@@ -16,7 +21,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private var editText: EditText? = null
     private var startTimerButton: Button? = null
+    private var resetTimerButton: Button? = null
     private var secondsLeftTextView: TextView? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +34,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         editText = findViewById(R.id.editText)
         startTimerButton = findViewById(R.id.startTimerButton)
+        resetTimerButton = findViewById(R.id.resetTimerButton)
         secondsLeftTextView = findViewById(R.id.secondsLeftTextView)
         // Навешиваем click listener на кнопку
         startTimerButton?.setOnClickListener {
@@ -40,6 +49,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 startTimerButton?.isEnabled = false
             }
         }
+
+        resetTimerButton?.setOnClickListener {
+            mainThreadHandler?.removeCallbacksAndMessages(null)
+            secondsLeftTextView?.text = "00:00"
+            startTimerButton?.isEnabled = true
+        }
+
     }
 
     private fun startTimer(duration: Long) {
@@ -53,11 +69,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         )
     }
 
+
     private fun createUpdateTimerTask(startTime: Long, duration: Long): Runnable {
         return object : Runnable {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun run() {
                 // Сколько прошло времени с момента запуска таймера
                 val elapsedTime = System.currentTimeMillis() - startTime
+                val vibrationEffect = VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
+                val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 // Сколько осталось до конца
                 val remainingTime = duration - elapsedTime
 
@@ -71,6 +91,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     // Если таймер окончен, выводим текст
                     secondsLeftTextView?.text = "Done!"
                     startTimerButton?.isEnabled = true
+                    vibrator.vibrate(vibrationEffect)
                     showMessage("Done!")
                 }
             }

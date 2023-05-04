@@ -9,22 +9,13 @@ import androidx.annotation.RequiresApi
 import android.os.VibrationEffect
 import android.os.Vibrator
 
-
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
-    companion object {
-        // Число миллисекунд в одной секунде
-        private const val DELAY = 1000L
-    }
-
     private var mainThreadHandler: Handler? = null
-
     private var editText: EditText? = null
     private var startTimerButton: Button? = null
     private var resetTimerButton: Button? = null
     private var secondsLeftTextView: TextView? = null
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,14 +23,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         // Создаём Handler, привязанный к ГЛАВНОМУ потоку
         mainThreadHandler = Handler(Looper.getMainLooper())
 
-        editText = findViewById(R.id.editText)
-        startTimerButton = findViewById(R.id.startTimerButton)
-        resetTimerButton = findViewById(R.id.resetTimerButton)
-        secondsLeftTextView = findViewById(R.id.secondsLeftTextView)
+        rId()
+
         // Навешиваем click listener на кнопку
         startTimerButton?.setOnClickListener {
             // Считали количество секунд
-            val secondsCount = editText?.text?.toString()?.takeIf { it.isNotBlank() }?.toLong() ?: 0L
+            val secondsCount =
+                editText?.text?.toString()?.takeIf { it.isNotBlank() }?.toLong() ?: 0L
 
             // Если можно запустить таймер — запускаем
             if (secondsCount <= 0) {
@@ -47,16 +37,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             } else {
                 startTimer(secondsCount)
                 startTimerButton?.isEnabled = false
-            }
-        }
+            } }
 
         resetTimerButton?.setOnClickListener {
             mainThreadHandler?.removeCallbacksAndMessages(null)
             secondsLeftTextView?.text = "00:00"
             startTimerButton?.isEnabled = true
-        }
-
-    }
+        } }
 
     private fun startTimer(duration: Long) {
         // Запоминаем время начала таймера
@@ -68,7 +55,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             createUpdateTimerTask(startTime, duration * DELAY)
         )
     }
-
 
     private fun createUpdateTimerTask(startTime: Long, duration: Long): Runnable {
         return object : Runnable {
@@ -93,10 +79,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     startTimerButton?.isEnabled = true
                     vibrator.vibrate(vibrationEffect)
                     showMessage("Done!")
-                }
-            }
-        }
-    }
+                } } } }
 
     private fun showMessage(text: String) {
         val rootView = findViewById<View>(android.R.id.content)?.rootView
@@ -104,5 +87,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         }
     }
+    private  fun rId() {
+        editText = findViewById(R.id.editText)
+        startTimerButton = findViewById(R.id.startTimerButton)
+        resetTimerButton = findViewById(R.id.resetTimerButton)
+        secondsLeftTextView = findViewById(R.id.secondsLeftTextView)
+    }
 
+    companion object {
+        // Число миллисекунд в одной секунде
+        private const val DELAY = 1000L
+    }
 }
